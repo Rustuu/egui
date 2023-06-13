@@ -255,7 +255,7 @@ impl Renderer {
         });
 
         let depth_stencil = output_depth_format.map(|format| wgpu::DepthStencilState {
-            format,
+            format: wgpu::TextureFormat::Depth32Float,
             depth_write_enabled: false,
             depth_compare: wgpu::CompareFunction::Always,
             stencil: wgpu::StencilState::default(),
