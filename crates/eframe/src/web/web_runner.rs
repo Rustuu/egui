@@ -95,7 +95,10 @@ impl WebRunner {
             log::debug!("Unsubscribing from {} events", events_to_unsubscribe.len());
             for x in events_to_unsubscribe {
                 if let Err(err) = x.unsubscribe() {
-                    log::warn!("Failed to unsubscribe from event: {err:?}");
+                    log::warn!(
+                        "Failed to unsubscribe from event: {}",
+                        super::string_from_js_value(&err)
+                    );
                 }
             }
         }
@@ -202,14 +205,14 @@ enum EventToUnsubscribe {
 impl EventToUnsubscribe {
     pub fn unsubscribe(self) -> Result<(), JsValue> {
         match self {
-            EventToUnsubscribe::TargetEvent(handle) => {
+            Self::TargetEvent(handle) => {
                 handle.target.remove_event_listener_with_callback(
                     handle.event_name.as_str(),
                     handle.closure.as_ref().unchecked_ref(),
                 )?;
                 Ok(())
             }
-            EventToUnsubscribe::IntervalHandle(handle) => {
+            Self::IntervalHandle(handle) => {
                 let window = web_sys::window().unwrap();
                 window.clear_interval_with_handle(handle.handle);
                 Ok(())

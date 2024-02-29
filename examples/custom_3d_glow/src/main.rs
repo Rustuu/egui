@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 #![allow(unsafe_code)]
 
-use eframe::egui;
+use eframe::{egui, egui_glow, glow};
 
 use egui::mutex::Mutex;
 use std::sync::Arc;
@@ -69,7 +69,7 @@ impl MyApp {
         let (rect, response) =
             ui.allocate_exact_size(egui::Vec2::splat(300.0), egui::Sense::drag());
 
-        self.angle += response.drag_delta().x * 0.01;
+        self.angle += response.drag_motion().x * 0.01;
 
         // Clone locals so we can move them into the paint callback:
         let angle = self.angle;
